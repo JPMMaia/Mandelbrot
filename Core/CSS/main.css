@@ -1,0 +1,22 @@
+#gl-canvas
+{
+    float: left;
+}
+
+#PrimitiveForm
+{
+    float: left;
+    margin: 1em;
+}
+
+#LightForm
+{
+    float: left;
+    margin: 1em;
+}
+
+#OtherForm
+{
+    float: left;
+    margin: 1em;
+}

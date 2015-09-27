@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebGL - Mandelbrot Set</title>
+
+    <link rel="stylesheet" href="CSS/main.css">
+
+    <!-- Common Includes -->
+    <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../Common/initShaders.js"></script>
+    <script type="text/javascript" src="../Common/MV.js"></script>
+
+    <!-- Shaders -->
+    <script id="MandelbrotVertexShader" type="x-shader/x-vertex">
+
+        uniform mat4 uModelMatrix;
+        uniform mat4 uViewMatrix;
+        uniform mat4 uProjectionMatrix;
+
+        attribute vec3 vPosition;
+        attribute vec2 vTextureCoordinates;
+
+        varying vec2 fTextureCoordinates;
+
+        void main()
+        {
+            fTextureCoordinates = vTextureCoordinates;
+
+            // Output position:
+            vec4 position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(vPosition, 1.0);
+            gl_Position = position;
+        }
+
+    </script>
+    <script id="MandelbrotFragmentShader" type="x-shader/x-fragment">
+
+        precision mediump float;
+
+        struct ImaginaryNumber
+        {
+            float real;
+            float imaginary;
+        };
+
+        uniform vec2 uCenter;
+        uniform float uZoom;
+
+        varying vec2 fTextureCoordinates;
+
+        void Add(in ImaginaryNumber n1, in ImaginaryNumber n2, out ImaginaryNumber result)
+        {
+            result.real = n1.real + n2.real;
+            result.imaginary = n1.imaginary + n2.imaginary;
+        }
+
+        void Multiply(in ImaginaryNumber n1, in ImaginaryNumber n2, out ImaginaryNumber result)
+        {
+            // (r1 * r2 - i1 * i2) + (r1 * i2 + r2 * i1) * j
+            result.real = n1.real * n2.real - n1.imaginary * n2.imaginary;
+            result.imaginary = n1.real * n2.imaginary + n2.real * n1.imaginary;
+        }
+
+        void main()
+        {
+            // Z{n + 1} = z{n}^2 + C
+            // |Z{n}|^2 > 4.0
+
+            float centerX = (uCenter.x + 1.0) * 3.5 / 2.0 - 2.5;
+            float centerY = uCenter.y;
+
+            ImaginaryNumber constant;
+            constant.real = centerX + (fTextureCoordinates.x * 3.5 - 2.5 + 0.75) / uZoom;
+            constant.imaginary = centerY + (fTextureCoordinates.y * 2.0 - 1.0) / uZoom;
+
+            ImaginaryNumber z;
+            z.real = 0.0;
+            z.imaginary = 0.0;
+
+            float lengthSquared;
+            ImaginaryNumber result;
+            for(int i = 0; i < 200; i++)
+            {
+                Multiply(z, z, result);
+                Add(result, constant, z);
+
+                lengthSquared = z.real * z.real + z.imaginary * z.imaginary;
+                if(lengthSquared > 4.0)
+                {
+                    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+                    return;
+                }
+            }
+
+            // Set fragment color:
+            gl_FragColor.r = fTextureCoordinates.x;
+            gl_FragColor.g = fTextureCoordinates.y;
+            gl_FragColor.b = 0.0;
+            gl_FragColor.a = 1.0;
+        }
+
+    </script>
+
+    <!-- Core Includes -->
+    <script type="text/javascript" src="Graphics/Utils/Utils.js"></script>
+    <script type="text/javascript" src="Graphics/Utils/VectorUtils.js"></script>
+    <script type="text/javascript" src="Graphics/Utils/RandomGenerator.js"></script>
+    <script type="text/javascript" src="Graphics/Utils/Subdivider.js"></script>
+    <script type="text/javascript" src="Graphics/Utils/GLBuffer.js"></script>
+    <script type="text/javascript" src="Graphics/Utils/GLIndexBuffer.js"></script>
+    <script type="text/javascript" src="Graphics/Models/Meshes/Triangle.js"></script>
+    <script type="text/javascript" src="Graphics/Models/Meshes/Square.js"></script>
+    <script type="text/javascript" src="Graphics/Models/Meshes/Sphere.js"></script>
+    <script type="text/javascript" src="Graphics/Models/Meshes/Cylinder.js"></script>
+    <script type="text/javascript" src="Graphics/Models/Meshes/Cone.js"></script>
+    <script type="text/javascript" src="Graphics/Textures/PerlinNoise.js"></script>
+    <script type="text/javascript" src="Graphics/Textures/Texture.js"></script>
+    <script type="text/javascript" src="Graphics/Models/SimpleModel.js"></script>
+    <script type="text/javascript" src="Graphics/Models/TextureModel.js"></script>
+    <script type="text/javascript" src="Graphics/Shaders/AbstractShader.js"></script>
+    <script type="text/javascript" src="Graphics/Shaders/MandelbrotShader.js"></script>
+    <script type="text/javascript" src="Graphics/Shaders/ShaderManager.js"></script>
+    <script type="text/javascript" src="Graphics/Components/CameraComponent.js"></script>
+    <script type="text/javascript" src="Graphics/Components/TransformComponent.js"></script>
+    <script type="text/javascript" src="Graphics/Components/PointLight.js"></script>
+    <script type="text/javascript" src="Graphics/Scene/Scene.js"></script>
+    <script type="text/javascript" src="Graphics/Graphics.js"></script>
+    <script type="text/javascript" src="Mouse.js"></script>
+    <script type="text/javascript" src="Application.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+
+</head>
+<body>
+
+    <!-- canvas gl-canvas -->
+    <canvas id="gl-canvas" width="1050" height="600">
+        Your browser doesn't support the HTML5 canvas element!
+    </canvas>
+
+</body>
+</html>
