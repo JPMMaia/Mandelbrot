@@ -36,6 +36,9 @@ Scene.prototype.render = function(gl, shaderManager)
     mandelbrotShader.setCenter(gl, this.centerX, this.centerY);
     mandelbrotShader.setZoom(gl, this.zoom);
 
+    // Set color palette texture:
+    mandelbrotShader.setColorPaletteTexture(gl, this.colorPaletteTexture);
+
     this.squareModel.render(gl);
 };
 
@@ -66,6 +69,11 @@ Scene.prototype.initializeObjects = function(gl, shaderManager)
             0.0, 0.0, 0.0, 1.0
         )
     );
+
+    // Create a color palette texture:
+    var colorPaletteImage = PaletteTexture.generateImage();
+    this.colorPaletteTexture = new Texture();
+    this.colorPaletteTexture.initialize(gl, colorPaletteImage, gl.RGBA, colorPaletteImage.length / 4, 1);
 
     this.centerX = 0;
     this.centerY = 0;

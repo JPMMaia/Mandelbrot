@@ -13,6 +13,8 @@ MandelbrotShader.prototype.initialize = function(gl)
     this.projectionMatrix = gl.getUniformLocation(this.super.program, "uProjectionMatrix");
     this.center = gl.getUniformLocation(this.super.program, "uCenter");
     this.zoom = gl.getUniformLocation(this.super.program, "uZoom");
+    this.colorPaletteTexture = gl.getUniformLocation(this.super.program, "uColorPalette");
+    this.numberOfColorsInPalette = gl.getUniformLocation(this.super.program, "uNumberOfColorsInPalette");
 
     // Get attributes locations:
     this.position = gl.getAttribLocation(this.super.program, "vPosition");
@@ -47,4 +49,10 @@ MandelbrotShader.prototype.setCenter = function(gl, x, y)
 MandelbrotShader.prototype.setZoom = function(gl, value)
 {
     gl.uniform1f(this.zoom, value);
+};
+
+MandelbrotShader.prototype.setColorPaletteTexture = function(gl, texture)
+{
+    texture.bind(gl, this.colorPaletteTexture, 0);
+    gl.uniform1i(this.numberOfColorsInPalette, texture.width);
 };

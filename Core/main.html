@@ -35,7 +35,7 @@
     </script>
     <script id="MandelbrotFragmentShader" type="x-shader/x-fragment">
 
-        precision mediump float;
+        precision highp float;
 
         struct ImaginaryNumber
         {
@@ -43,6 +43,11 @@
             float imaginary;
         };
 
+        const int MAX_ITERATION = 200;
+        const int MODE = 0;
+
+        uniform sampler2D uColorPalette;
+        uniform int uNumberOfColorsInPalette;
         uniform vec2 uCenter;
         uniform float uZoom;
 
@@ -59,6 +64,11 @@
             // (r1 * r2 - i1 * i2) + (r1 * i2 + r2 * i1) * j
             result.real = n1.real * n2.real - n1.imaginary * n2.imaginary;
             result.imaginary = n1.real * n2.imaginary + n2.real * n1.imaginary;
+        }
+
+        vec4 LinearInterpolate(in vec4 color1, in vec4 color2, in float weight)
+        {
+            return (1.0 - weight) * color1 + weight * color2;
         }
 
         void main()
@@ -79,24 +89,57 @@
 
             float lengthSquared;
             ImaginaryNumber result;
-            for(int i = 0; i < 200; i++)
+            int iteration = 0;
+            for(int i = 0; i < MAX_ITERATION; i++)
             {
                 Multiply(z, z, result);
                 Add(result, constant, z);
 
                 lengthSquared = z.real * z.real + z.imaginary * z.imaginary;
                 if(lengthSquared > 4.0)
+                    break;
+
+                iteration++;
+            }
+
+            if(MODE == 0)
+            {
+                float quotient = float(iteration) / float(MAX_ITERATION);
+                if(quotient > 0.95)
+                    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+                else
+                    gl_FragColor = vec4(0.0, 0.0, quotient, 1.0);
+
+                return;
+            }
+            else if(MODE == 1)
+            {
+                if(iteration == MAX_ITERATION)
                 {
                     gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
                     return;
                 }
+
+                float colorIndex = mod(float(iteration), float(uNumberOfColorsInPalette)) / float(uNumberOfColorsInPalette);
+                vec4 color = texture2D(uColorPalette, vec2(colorIndex, 1.0));
+                gl_FragColor = color;
+            }
+            else if(MODE == 2)
+            {
+                float weight = log2(log(lengthSquared) / log(float(iteration)));
+                float vz = float(iteration) + 1.0 - weight;
+
+                float color1Index = mod(vz, float(uNumberOfColorsInPalette)) / float(uNumberOfColorsInPalette);
+                float color2Index = mod(vz + 1.0, float(uNumberOfColorsInPalette)) / float(uNumberOfColorsInPalette);
+
+                vec4 color1 = texture2D(uColorPalette, vec2(color1Index, 1.0));
+                vec4 color2 = texture2D(uColorPalette, vec2(color2Index, 1.0));
+
+                vec4 color = LinearInterpolate(color1, color2, vz / float(MAX_ITERATION));
+                gl_FragColor = color;
             }
 
-            // Set fragment color:
-            gl_FragColor.r = fTextureCoordinates.x;
-            gl_FragColor.g = fTextureCoordinates.y;
-            gl_FragColor.b = 0.0;
-            gl_FragColor.a = 1.0;
+            //gl_FragColor = texture2D(uColorPalette, fTextureCoordinates);
         }
 
     </script>
@@ -113,6 +156,7 @@
     <script type="text/javascript" src="Graphics/Models/Meshes/Sphere.js"></script>
     <script type="text/javascript" src="Graphics/Models/Meshes/Cylinder.js"></script>
     <script type="text/javascript" src="Graphics/Models/Meshes/Cone.js"></script>
+    <script type="text/javascript" src="Graphics/Textures/PaletteTexture.js"></script>
     <script type="text/javascript" src="Graphics/Textures/PerlinNoise.js"></script>
     <script type="text/javascript" src="Graphics/Textures/Texture.js"></script>
     <script type="text/javascript" src="Graphics/Models/SimpleModel.js"></script>

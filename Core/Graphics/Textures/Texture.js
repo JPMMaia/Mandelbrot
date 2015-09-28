@@ -11,6 +11,9 @@ Texture.prototype.initialize = function(gl, image, format, width, height)
     gl.generateMipmap(gl.TEXTURE_2D);
 
     gl.bindTexture(gl.TEXTURE_2D, null);
+
+    this.width = width;
+    this.height = height;
 };
 Texture.prototype.initializeWithFile = function(gl, image, format)
 {
