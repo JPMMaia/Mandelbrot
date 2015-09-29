@@ -97,6 +97,11 @@ Application.prototype.setZoom = function(value, positionX, positionY)
     this.targetZoom = 2.0 / this.width;
 };
 
+Application.prototype.setMode = function(value)
+{
+    this.scene.setMode(value);
+};
+
 Application.prototype.linearInterpolate = function(current, target, deltaTime)
 {
     return (1.0 - deltaTime) * current + deltaTime * target;

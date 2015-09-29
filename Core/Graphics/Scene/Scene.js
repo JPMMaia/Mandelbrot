@@ -33,11 +33,11 @@ Scene.prototype.render = function(gl, shaderManager)
     // Set model matrix:
     mandelbrotShader.setModelMatrix(gl, this.squareModelMatrix);
 
+    // Set other shader parameters:
     mandelbrotShader.setCenter(gl, this.centerX, this.centerY);
     mandelbrotShader.setZoom(gl, this.zoom);
-
-    // Set color palette texture:
     mandelbrotShader.setColorPaletteTexture(gl, this.colorPaletteTexture);
+    mandelbrotShader.setMode(gl, this.mode);
 
     this.squareModel.render(gl);
 };
@@ -78,6 +78,7 @@ Scene.prototype.initializeObjects = function(gl, shaderManager)
     this.centerX = 0;
     this.centerY = 0;
     this.zoom = 0;
+    this.mode = 0;
 };
 Scene.prototype.shutdownObjects = function(gl)
 {
@@ -93,4 +94,9 @@ Scene.prototype.setCenter = function (x, y)
 Scene.prototype.setZoom = function(value)
 {
     this.zoom = value;
+};
+
+Scene.prototype.setMode = function(value)
+{
+    this.mode = value;
 };

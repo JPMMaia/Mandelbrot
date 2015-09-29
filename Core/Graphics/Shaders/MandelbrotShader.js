@@ -15,6 +15,7 @@ MandelbrotShader.prototype.initialize = function(gl)
     this.zoom = gl.getUniformLocation(this.super.program, "uZoom");
     this.colorPaletteTexture = gl.getUniformLocation(this.super.program, "uColorPalette");
     this.numberOfColorsInPalette = gl.getUniformLocation(this.super.program, "uNumberOfColorsInPalette");
+    this.mode = gl.getUniformLocation(this.super.program, "uMode");
 
     // Get attributes locations:
     this.position = gl.getAttribLocation(this.super.program, "vPosition");
@@ -55,4 +56,9 @@ MandelbrotShader.prototype.setColorPaletteTexture = function(gl, texture)
 {
     texture.bind(gl, this.colorPaletteTexture, 0);
     gl.uniform1i(this.numberOfColorsInPalette, texture.width);
+};
+
+MandelbrotShader.prototype.setMode = function(gl, value)
+{
+    gl.uniform1i(this.mode, value);
 };
