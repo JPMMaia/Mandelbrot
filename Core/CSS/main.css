@@ -1,22 +1,44 @@
-#gl-canvas
+html, body
 {
-    float: left;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
-#PrimitiveForm
+#Sidebar
 {
-    float: left;
-    margin: 1em;
+    color: rgba(255, 255, 255, 1.0);
+    background: rgba(0, 0, 200, 0.1);
+    border-right: 1px solid rgba(0, 0, 80, 0.8);
+    width: 15%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    text-align: center;
 }
 
-#LightForm
+.Text
 {
-    float: left;
-    margin: 1em;
+    margin: 1.3em;
+    letter-spacing: 0.08em;
+    line-height: 1.4em;
+    font-size: 1.0em;
 }
 
-#OtherForm
+#SelectMode
 {
-    float: left;
-    margin: 1em;
+    margin-top: 0.5em;
+}
+
+#Signature
+{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: rgba(128, 128, 128, 0.5);
+    font-size: 0.8em;
+    margin: 0.5em;
 }

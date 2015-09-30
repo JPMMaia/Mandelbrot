@@ -20,8 +20,6 @@ Mouse.prototype.update = function(deltaMilliseconds)
 
     this.oldPositionX = this.newPositionX;
     this.oldPositionY = this.newPositionY;
-
-    //console.log("vx: " + this.velocityX + " vy: " + this.velocityY);
 };
 
 Mouse.prototype.move = function(positionX, positionY)

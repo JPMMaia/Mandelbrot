@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>WebGL - Mandelbrot Set</title>
 
-    <link rel="stylesheet" href="CSS/main.css">
-
     <!-- Common Includes -->
     <script type="text/javascript" src="../Common/webgl-utils.js"></script>
     <script type="text/javascript" src="../Common/initShaders.js"></script>
@@ -45,6 +43,7 @@
 
         const int MAX_ITERATION = 200;
 
+        uniform float uAspectRatio;
         uniform int uMode;
         uniform sampler2D uColorPalette;
         uniform int uNumberOfColorsInPalette;
@@ -80,7 +79,7 @@
             float centerY = uCenter.y;
 
             ImaginaryNumber constant;
-            constant.real = centerX + (fTextureCoordinates.x * 3.5 - 2.5 + 0.75) / uZoom;
+            constant.real = centerX + 1.0 * (fTextureCoordinates.x * 3.5 - 2.5 + 0.75) / uZoom;
             constant.imaginary = centerY + (fTextureCoordinates.y * 2.0 - 1.0) / uZoom;
 
             ImaginaryNumber z;
@@ -169,17 +168,42 @@
     <script type="text/javascript" src="Graphics/Components/PointLight.js"></script>
     <script type="text/javascript" src="Graphics/Scene/Scene.js"></script>
     <script type="text/javascript" src="Graphics/Graphics.js"></script>
-    <script type="text/javascript" src="Mouse.js"></script>
+    <script type="text/javascript" src="Input/Keyboard.js"></script>
+    <script type="text/javascript" src="Input/Mouse.js"></script>
     <script type="text/javascript" src="Application.js"></script>
     <script type="text/javascript" src="main.js"></script>
+
+    <link rel="stylesheet" href="CSS/main.css">
 
 </head>
 <body>
 
     <!-- canvas gl-canvas -->
-    <canvas id="gl-canvas" width="1050" height="600">
+    <canvas id="gl-canvas" width="1000" height="500">
         Your browser doesn't support the HTML5 canvas element!
     </canvas>
+
+    <section id="Sidebar">
+
+        <p class="Text">
+            To zoom use the mouse wheel or press 'Z' to zoom in and 'X' to zoom out.
+            To move around use the arrow keys or drag the mouse while pressing its left button.
+        </p>
+
+        <form>
+
+            <label class="Text" for="SelectMode">Coloring Mode</label>
+            <select id="SelectMode">
+                <option>Mode 1</option>
+                <option>Mode 2</option>
+                <option>Mode 3</option>
+            </select>
+
+        </form>
+
+    </section>
+
+    <footer id="Signature" class="Text">Created by JPMMaia</footer>
 
 </body>
 </html>
