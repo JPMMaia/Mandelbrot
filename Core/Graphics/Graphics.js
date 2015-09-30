@@ -27,6 +27,9 @@ Graphics.prototype.initialize = function(canvas)
 
 Graphics.prototype.beginScene = function()
 {
+    var aspectRatio = this.canvas.width / this.canvas.height;
+    this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+
     // Clear screen:
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 };

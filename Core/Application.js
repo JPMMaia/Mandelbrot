@@ -175,6 +175,5 @@ Application.prototype.resizeCanvas = function(width, height)
     this.canvas.width = width;
     this.canvas.height = height;
     this.aspectRatio = width / height;
-    //this.scene.setAspectRatio(this.aspectRatio);
-    //this.scene.setOrthogonalMode(this.aspectRatio);
+    this.scene.setOrthogonalMode(this.aspectRatio);
 };

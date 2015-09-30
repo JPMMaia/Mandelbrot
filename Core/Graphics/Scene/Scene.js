@@ -4,8 +4,6 @@ function Scene()
 
 Scene.prototype.initialize = function(gl, shaderManager, aspectRatio)
 {
-    this.aspectRatio = aspectRatio;
-
         // Set clear color:
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -40,7 +38,6 @@ Scene.prototype.render = function(gl, shaderManager)
     mandelbrotShader.setZoom(gl, this.zoom);
     mandelbrotShader.setColorPaletteTexture(gl, this.colorPaletteTexture);
     mandelbrotShader.setMode(gl, this.mode);
-    mandelbrotShader.setAspectRatio(gl, this.aspectRatio);
 
     this.squareModel.render(gl);
 };
@@ -103,9 +100,4 @@ Scene.prototype.setZoom = function(value)
 Scene.prototype.setMode = function(value)
 {
     this.mode = value;
-};
-
-Scene.prototype.setAspectRatio = function(value)
-{
-    this.aspectRatio = value;
 };

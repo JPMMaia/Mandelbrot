@@ -43,7 +43,6 @@
 
         const int MAX_ITERATION = 200;
 
-        uniform float uAspectRatio;
         uniform int uMode;
         uniform sampler2D uColorPalette;
         uniform int uNumberOfColorsInPalette;
@@ -79,7 +78,7 @@
             float centerY = uCenter.y;
 
             ImaginaryNumber constant;
-            constant.real = centerX + 1.0 * (fTextureCoordinates.x * 3.5 - 2.5 + 0.75) / uZoom;
+            constant.real = centerX + (fTextureCoordinates.x * 3.5 - 2.5 + 0.75) / uZoom;
             constant.imaginary = centerY + (fTextureCoordinates.y * 2.0 - 1.0) / uZoom;
 
             ImaginaryNumber z;
@@ -137,8 +136,6 @@
                 vec4 color = LinearInterpolate(color1, color2, vz / float(MAX_ITERATION));
                 gl_FragColor = color;
             }
-
-            //gl_FragColor = texture2D(uColorPalette, fTextureCoordinates);
         }
 
     </script>
