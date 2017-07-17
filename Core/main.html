@@ -102,13 +102,17 @@
 
             if(uMode == 0)
             {
-                float quotient = float(iteration) / float(MAX_ITERATION);
-                if(quotient > 0.95)
-                    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-                else
-                    gl_FragColor = vec4(0.0, 0.0, quotient, 1.0);
+                float weight = log2(log(lengthSquared) / log(float(iteration)));
+                float vz = float(iteration) + 1.0 - weight;
 
-                return;
+                float color1Index = mod(vz, float(uNumberOfColorsInPalette)) / float(uNumberOfColorsInPalette);
+                float color2Index = mod(vz + 1.0, float(uNumberOfColorsInPalette)) / float(uNumberOfColorsInPalette);
+
+                vec4 color1 = texture2D(uColorPalette, vec2(color1Index, 1.0));
+                vec4 color2 = texture2D(uColorPalette, vec2(color2Index, 1.0));
+
+                vec4 color = LinearInterpolate(color1, color2, vz / float(MAX_ITERATION));
+                gl_FragColor = color;
             }
             else if(uMode == 1)
             {
@@ -124,17 +128,13 @@
             }
             else if(uMode == 2)
             {
-                float weight = log2(log(lengthSquared) / log(float(iteration)));
-                float vz = float(iteration) + 1.0 - weight;
+                float quotient = float(iteration) / float(MAX_ITERATION);
+                if(quotient > 0.95)
+                    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+                else
+                    gl_FragColor = vec4(0.0, 0.0, quotient, 1.0);
 
-                float color1Index = mod(vz, float(uNumberOfColorsInPalette)) / float(uNumberOfColorsInPalette);
-                float color2Index = mod(vz + 1.0, float(uNumberOfColorsInPalette)) / float(uNumberOfColorsInPalette);
-
-                vec4 color1 = texture2D(uColorPalette, vec2(color1Index, 1.0));
-                vec4 color2 = texture2D(uColorPalette, vec2(color2Index, 1.0));
-
-                vec4 color = LinearInterpolate(color1, color2, vz / float(MAX_ITERATION));
-                gl_FragColor = color;
+                return;
             }
         }
 

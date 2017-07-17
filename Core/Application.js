@@ -76,25 +76,25 @@ Application.prototype.processKeyboardInput = function(deltaMilliseconds)
     }
 
     // Left arrow:
-    if(this.keyboard.isKeyDown(0x25))
+    if(this.keyboard.isKeyDown(0x25) || this.keyboard.isKeyDown(0x41))
     {
         this.moveCenter(-0.1, 0.0);
     }
 
     // Up arrow:
-    if(this.keyboard.isKeyDown(0x26))
+    if(this.keyboard.isKeyDown(0x26) || this.keyboard.isKeyDown(0x57))
     {
         this.moveCenter(0.0, 0.1);
     }
 
     // Right arrow:
-    if(this.keyboard.isKeyDown(0x27))
+    if(this.keyboard.isKeyDown(0x27) || this.keyboard.isKeyDown(0x44))
     {
         this.moveCenter(0.1, 0.0);
     }
 
     // Down arrow:
-    if(this.keyboard.isKeyDown(0x28))
+    if(this.keyboard.isKeyDown(0x28) || this.keyboard.isKeyDown(0x53))
     {
         this.moveCenter(0.0, -0.1);
     }
@@ -139,15 +139,6 @@ Application.prototype.setZoom = function(value, positionX, positionY)
 
     this.width /= zoomValue;
     this.height /= zoomValue;
-
-    if(value > 0.0)
-    {
-        positionX = 2.0 * positionX / this.canvas.width - 1.0;
-        positionY = 2.0 * (this.canvas.height - positionY) / this.canvas.height - 1.0;
-
-        this.targetCenterX += positionX * (this.width / 2.0);
-        this.targetCenterY += positionY * (this.height / 2.0);
-    }
 
     this.targetZoom = 2.0 / this.width;
 };
